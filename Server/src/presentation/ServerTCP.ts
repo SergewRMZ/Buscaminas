@@ -8,7 +8,8 @@ export class ServerTCP {
 
   private readonly server = net.createServer((socket) => {
     console.log(`Cliente conectado: ${socket.remoteAddress}`);
-
+    this.clients.push(socket);
+    
     socket.on('data', (data) => {
       const mensaje = data.toString().trim();
       console.log('Mensaje recibido', mensaje);
