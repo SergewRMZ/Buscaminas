@@ -97,17 +97,12 @@ void Server::processMessage (char *buffer) {
   try {
     json j = json::parse(buffer);
     string action = j["action"];
+    string response;
 
     if (action == "start") {
       string difficulty = j["difficulty"];
-      string response = this->gameController.initGame(difficulty);
+      response = this->gameController.initGame(difficulty);
       cout << response << endl;
-      int bytesSent = send(clientSocket, response.c_str(), response.size(), 0);
-      if (bytesSent == SOCKET_ERROR) {
-          cout << "Error al enviar los datos" << endl;
-      } else {
-          cout << "Enviados " << bytesSent << " bytes al cliente." << endl;
-      }
     }
 
     else if (action == "reveal") {
@@ -117,10 +112,16 @@ void Server::processMessage (char *buffer) {
 
       cout << "Columna: " << col << endl;
       cout << "Fila: " << row << endl;
-      string response = this->gameController.revealCell(row, col);
-
+      response = this->gameController.revealCell(row, col);
       cout << response << endl;
     }
+
+    // Envíar respuesta al cliente
+    int bytesSent = send(clientSocket, response.c_str(), response.size(), 0);
+    if (bytesSent == SOCKET_ERROR)
+      cout << "Error al enviar los datos" << endl;
+    else 
+      cout << "Enviados " << bytesSent << " bytes al cliente." << endl;
   }
   
   catch(const std::exception& e) {
