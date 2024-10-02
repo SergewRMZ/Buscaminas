@@ -9,7 +9,7 @@ vector<vector<string>> GameService::initGame (string difficulty) {
     rows = 9;
   }
 
-  else if (difficulty == "medium") {
+  else if (difficulty == "normal") {
     mines = 40;
     cols = 16;
     rows = 16;
