@@ -5,6 +5,8 @@ GameBoard::GameBoard(int mines, int rows, int cols)
     board(rows, vector<int>(cols, 0)),
     countCells((rows * cols) - mines),
     visibleBoard(rows, vector<string>(cols, "-")),
+    lose(false),
+    win(false),
     directions{{-1, -1}, {-1, 0}, {-1, 1},
                 {0, -1}, {0, 1},
                 {1, -1}, {1, 0}, {1, 1}}
@@ -55,8 +57,7 @@ void GameBoard::gameOver () {
     this->visibleBoard[row][col] = "-1";
   }
 
-  cout << "GAME OVER!" << endl;
-  // exit(EXIT_SUCCESS);
+  this->lose = true;
 }
 
 void GameBoard::revealCell(int row, int col) {
@@ -100,6 +101,7 @@ void GameBoard::revealCell(int row, int col) {
   cout << "Contador celdas: " << this->countCells << endl;
   if (this->countCells == 0) {
     cout << "¡Felicidades, HAS GANADO!" << endl;
+    this->win = true;
   }
 }
 

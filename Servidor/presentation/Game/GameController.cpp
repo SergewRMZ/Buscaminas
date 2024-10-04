@@ -1,31 +1,51 @@
 #include "GameController.hpp"
-#include <nlohmann/json.hpp>
 
 GameController::GameController () {}
-
 string GameController::initGame(string difficulty) {
   auto board = this->gameService.initGame(difficulty);
+  nlohmann::json response;
+
   if (!board.empty()) {
-    string boardJSON = this->boardToJSON(board);
-    return "{\"status\": \"success\", \"message\": \"Juego iniciado en dificultad " + difficulty + "\", \"board\": " + boardJSON + "}\n";
-  } 
+    response["status"] = "success";
+    response["mode"] = difficulty;
+    response["board"] = board;
+  }
 
   else {
-      return "{\"status\": \"error\", \"message\": \"Error al iniciar el juego.\"}\n";
+    response["status"] = "error";
+    response["message"] = "Error al iniciar el juego.";
   }
+  return response.dump() + "\n";
 }
 
 string GameController::revealCell(int row, int col) {
   auto board = this->gameService.revealCell(row, col);
+  nlohmann:: json response;
+
   if (!board.empty()) {
-    string boardJSON = this->boardToJSON(board);
-    return "{\"status\": \"success\", \"board\": " + boardJSON + "}\n";
+    response["status"] = "success";
+    response["board"] = board;
+
+    if (this->gameService.verifyWin()) {
+      response["win"] = true;
+      this->gameService.registerRecord(); // Solicitar escribir el récord.
+    }
+
+    if (this->gameService.verifyLose()) {
+      response["lose"] = true;
+      cout << "Has perdido" << endl;
+    }
   }
   
   else {
-      return "{\"status\": \"error\", \"message\": \"Error al intentar destapar la celda.\"}\n";
+    response["status"] = "error";
+    response["message"] = "Error al intentar destapar la celda.";
   }
+  
+  return response.dump() + "\n";
 }
+
+
 
 string GameController::boardToJSON(const vector<vector<string>> &board) {
   nlohmann::json jsonBoard = board;

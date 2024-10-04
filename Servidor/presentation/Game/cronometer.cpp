@@ -5,33 +5,27 @@
 using namespace std;
 using namespace std::chrono;
 
-time_point<high_resolution_clock> iniciarCronometro() {
-    auto inicio = high_resolution_clock::now();
-    return inicio;
-}
+class Chronometer {
+    private:
+        time_point<high_resolution_clock> startTime;
+        bool running;
 
-void detenerCronometro(time_point<high_resolution_clock> inicio) {
-    auto fin = high_resolution_clock::now();
-    duration<double> duracion = fin - inicio;
-    cout << "Tiempo transcurrido: " << duracion.count() << " segundos" << endl;
-}
+    public:
+        Chronometer() : running(false) {}
 
-int main() {
-    char input;
-    
-    cout << "Presiona 's' para iniciar el cronómetro: ";
-    cin >> input;
-
-    if (input == 's') {
-        auto inicio = iniciarCronometro();  // Recibe el tiempo de inicio
-        
-        cout << "Presiona 'e' para detener el cronómetro: ";
-        cin >> input;
-
-        if (input == 'e') {
-            detenerCronometro(inicio);  // Pasa el tiempo de inicio para calcular el tiempo
+        void start () {
+            startTime = high_resolution_clock::now();
+            running = true;
         }
-    }
 
-    return 0;
-}
+        duration<double> stop() {
+            if (running) {
+                auto endTime = high_resolution_clock::now();
+                duration<double> duration = endTime - startTime;
+                running = false;
+                return duration;
+            }
+
+            return duration<double>::zero();
+        }
+};

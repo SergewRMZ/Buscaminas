@@ -7,7 +7,9 @@ add_executable(server app.cpp
   presentation/Server.cpp
   presentation/Game/GameBoard.cpp
   presentation/Game/GameController.cpp
-  presentation/Services/game-service.cpp)
+  presentation/Game/cronometer.cpp
+  presentation/Services/game-service.cpp
+  presentation/Services/file-service.cpp)
 
 find_package(nlohmann_json REQUIRED)
 target_link_libraries(server PRIVATE nlohmann_json::nlohmann_json Ws2_32)

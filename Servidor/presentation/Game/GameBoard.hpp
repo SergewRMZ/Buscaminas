@@ -32,7 +32,8 @@ class GameBoard {
     void verJuego();
     void IA();
     vector<vector<string>> getBoard() const;
-
+    bool lose;
+    bool win;
 };
 
 #endif

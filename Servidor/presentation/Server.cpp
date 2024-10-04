@@ -102,19 +102,18 @@ void Server::processMessage (char *buffer) {
     if (action == "start") {
       string difficulty = j["difficulty"];
       response = this->gameController.initGame(difficulty);
-      cout << response << endl;
     }
 
     else if (action == "reveal") {
       json cell = j["cell"];
       int row = cell["row"];
       int col = cell["col"];
-
-      cout << "Columna: " << col << endl;
-      cout << "Fila: " << row << endl;
       response = this->gameController.revealCell(row, col);
-      cout << response << endl;
     }
+
+    // else if (action == "getRanking") {
+    //   this->gameController.getRanking();
+    // }
 
     // Envíar respuesta al cliente
     int bytesSent = send(clientSocket, response.c_str(), response.size(), 0);

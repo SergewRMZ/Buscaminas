@@ -2,6 +2,8 @@
 
 vector<vector<string>> GameService::initGame (string difficulty) {
   unsigned int mines, cols, rows;
+  this->chronometer.start();
+  this->difficulty = difficulty;
 
   if (difficulty == "easy") {
     mines = 10;
@@ -32,6 +34,24 @@ vector<vector<string>> GameService::initGame (string difficulty) {
 
 vector<vector<string>> GameService::revealCell(int row, int col) {
   this->game->revealCell(row, col);
+  if (this->game->win || this->game->lose) {
+    duration<double> tiempo = this->chronometer.stop();
+    this->gameTime = tiempo.count();
+  }
+
   return this->game->getBoard();
 }
+
+void GameService::registerRecord () {
+  this->fileService.writeRecord(this->difficulty, this->gameTime);
+} 
+
+bool GameService::verifyWin () {
+  return this->game->win;
+}
+
+bool GameService::verifyLose () {
+  return this->game->lose;
+}
+
 

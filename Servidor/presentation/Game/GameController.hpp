@@ -2,6 +2,7 @@
 #define GAME_CONTROLLER
 
 #include "../Services/game-service.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class GameController {
     GameController ();
     string initGame (string difficulty);
     string revealCell (int row, int col);
+    // vector<double> getRanking ();
 
 };
 
