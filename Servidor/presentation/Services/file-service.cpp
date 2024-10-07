@@ -1,9 +1,10 @@
 #include "file-service.hpp"
 #include <sstream>
+#include <filesystem>
 
 void FileService :: writeRecord (string difficulty, double time) {
   string filename;
-
+  cout << "Registrando record: " << time << endl;
   if (difficulty == "easy") filename = filename_easy;
   else if (difficulty == "medium") filename = filename_medium;
   else if (difficulty == "hard") filename = filename_hard;
@@ -43,8 +44,12 @@ vector<string> FileService :: getRecords (string difficulty) {
   else if (difficulty == "medium") filename = filename_medium;
   else if (difficulty == "hard") filename = filename_hard;
 
-  ifstream inFile(filename);
+  if (!std::filesystem::exists(filename)) {
+    cerr << "El archivo no existe: " << filename << endl;
+    return records;
+  }
 
+  ifstream inFile(filename);
   if (!inFile.is_open()) {
     cerr << "Error al abrir el archivo para leer." << endl;
     return records;

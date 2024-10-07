@@ -15,7 +15,7 @@ class GameController {
     GameController ();
     string initGame (string difficulty);
     string revealCell (int row, int col);
-    // vector<double> getRanking ();
+    string getRanking ();
 
 };
 

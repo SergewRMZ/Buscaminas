@@ -41,23 +41,38 @@ Server:: Server (int port) {
 
   cout << "Esperando conexiones en el puerto " << port << "..." << endl;
   this->showSocket();
-  int clientSize = sizeof(clientAddr);
-  clientSocket = accept(serverSocket, (SOCKADDR *) &clientAddr, &clientSize);
 
-  if (clientSocket == INVALID_SOCKET) {
-      cout << "Error al aceptar la conexión." << endl;
-      cleanUpSocket();
+  while(true) {
+    int clientSize = sizeof(clientAddr);
+    clientSocket = accept(serverSocket, (SOCKADDR *) &clientAddr, &clientSize);
+
+    if (clientSocket == INVALID_SOCKET) {
+        cout << "Error al aceptar la conexión." << endl;
+        // cleanUpSocket();
+        continue;
+    }
+
+    cout << "Cliente conectado." << endl;
+    thread clientThread(&Server::handleClient, this, clientSocket);
+    clientThread.detach(); 
   }
+}
 
-  cout << "Cliente conectado." << endl;
+void Server::handleClient(SOCKET clientSocket) {
   char buffer[1024];
-  
+
   while (true) {
     int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
     if (bytesReceived > 0) {
       buffer[bytesReceived] = '\0';
       cout << "Mensaje recibido del cliente: " << buffer << endl;
       this->processMessage(buffer);
+    }
+
+    else {
+      cout << "Cliente desconectado." << endl;
+      closesocket(clientSocket);
+      break;  
     }
   }
 }
@@ -111,9 +126,9 @@ void Server::processMessage (char *buffer) {
       response = this->gameController.revealCell(row, col);
     }
 
-    // else if (action == "getRanking") {
-    //   this->gameController.getRanking();
-    // }
+    else if (action == "getranking") {
+      response = this->gameController.getRanking();
+    }
 
     // Envíar respuesta al cliente
     int bytesSent = send(clientSocket, response.c_str(), response.size(), 0);

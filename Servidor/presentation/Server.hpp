@@ -20,6 +20,7 @@ class Server {
   private:
     GameController gameController;
     void processMessage (char *buffer);
+    void handleClient(SOCKET clientSocket);
 };
 
 #endif

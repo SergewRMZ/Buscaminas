@@ -23,6 +23,7 @@ class GameService {
     bool verifyWin();
     bool verifyLose();
     void registerRecord();
+    vector<string> getRanking();
 };
 
 #endif

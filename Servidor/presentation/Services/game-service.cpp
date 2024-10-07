@@ -46,6 +46,10 @@ void GameService::registerRecord () {
   this->fileService.writeRecord(this->difficulty, this->gameTime);
 } 
 
+vector<string> GameService::getRanking () {
+  return this->fileService.getRecords(this->difficulty);
+}
+
 bool GameService::verifyWin () {
   return this->game->win;
 }

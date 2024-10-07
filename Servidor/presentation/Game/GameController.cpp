@@ -29,11 +29,13 @@ string GameController::revealCell(int row, int col) {
     if (this->gameService.verifyWin()) {
       response["win"] = true;
       this->gameService.registerRecord(); // Solicitar escribir el récord.
+      cout << "Has ganado" << endl;
     }
 
     if (this->gameService.verifyLose()) {
       response["lose"] = true;
       cout << "Has perdido" << endl;
+
     }
   }
   
@@ -45,7 +47,21 @@ string GameController::revealCell(int row, int col) {
   return response.dump() + "\n";
 }
 
+string GameController:: getRanking () {
+  vector<string> ranking = this->gameService.getRanking();
+  nlohmann::json response;
 
+  if (!ranking.empty()) {
+    response["status"] = "success";
+    response["ranking"] = ranking;
+  }
+
+  else {
+    response["status"] = "error";
+    response["message"] = "Error al obtener el ranking del juego.";
+  }
+  return response.dump() + "\n";
+}
 
 string GameController::boardToJSON(const vector<vector<string>> &board) {
   nlohmann::json jsonBoard = board;
